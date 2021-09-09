@@ -7,18 +7,19 @@ Further investigation is required to make sense of the files operating in the ba
 */
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "<====Title====>");
-    sf::CircleShape shape(50.f);
+    sf::RenderWindow window(sf::VideoMode(500, 500), "<====Title====>", sf::Style::Close | sf::Style::Titlebar);
+    sf::CircleShape shape(25.f);
     shape.setFillColor(sf::Color::Green);
 
     sf::CircleShape shape_two(25.f);
     shape_two.setFillColor(sf::Color::Red);
 
-    //sf::RectangleShape rectangle(sf::Vector2f(120.f, 50.f));
-    //rectangle.setSize(sf::Vector2f(100.f, 100.f));
+    sf::RectangleShape rectangle(sf::Vector2f(120.f, 50.f));
+    rectangle.setSize(sf::Vector2f(100.f, 100.f));
 
     while (window.isOpen())
     {
@@ -31,25 +32,27 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
         {
-            shape.move(sf::Vector2f(-0.5f, 0.0));
+            shape.move(sf::Vector2f(-0.3f, 0.0));
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
         {
-            shape.move(sf::Vector2f(0.5f, 0.0));
+            shape.move(sf::Vector2f(0.3f, 0.0));
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
         {
-            shape.move(sf::Vector2f(0.0, -0.5f));
+            shape.move(sf::Vector2f(0.0, -0.3f));
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
         {
-            shape.move(sf::Vector2f(0.0, +0.5f));
+            shape.move(sf::Vector2f(0.0, +0.3f));
         }
 
         window.clear();
         window.draw(shape);
         window.draw(shape_two);
-        //window.draw(rectangle);
+        std::cout << shape_two.getPointCount() << "\n";
+        std::cout << shape_two.getLocalBounds() << "\n";
+        window.draw(rectangle);
         window.display();
 
     }
