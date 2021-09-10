@@ -8,10 +8,17 @@ Further investigation is required to make sense of the files operating in the ba
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <Windows.h>
+
+void window_collision_check(float win_x, float win_y, float x, float y)
+{
+    std::cout << win_x << "\n";
+    std::cout << win_y << "\n";
+}
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "<====Title====>", sf::Style::Close | sf::Style::Titlebar);
+    sf::RenderWindow window(sf::VideoMode(700, 400), "<====Title====>", sf::Style::Close | sf::Style::Titlebar);
     sf::CircleShape shape(25.f);
     shape.setFillColor(sf::Color::Green);
 
@@ -50,10 +57,11 @@ int main()
         window.clear();
         window.draw(shape);
         window.draw(shape_two);
-        std::cout << shape_two.getPointCount() << "\n";
-        std::cout << shape_two.getLocalBounds() << "\n";
+        std::cout << shape.getPosition().x << " " << shape.getPosition().y << "\n";
+        window_collision_check(window.getSize().x, window.getSize().y, shape.getPosition().x, shape.getPosition().y);
         window.draw(rectangle);
         window.display();
+        Sleep(0.01);
 
     }
 
