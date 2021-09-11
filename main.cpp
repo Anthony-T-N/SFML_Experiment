@@ -10,11 +10,57 @@ Further investigation is required to make sense of the files operating in the ba
 #include <iostream>
 #include <Windows.h>
 
-void window_collision_check(float win_x, float win_y, float x, float y)
+// call by reference to function.
+void window_collision_check(float win_x, float win_y, float x, float y, sf::CircleShape &shape)
 {
+    x = shape.getPosition().x;
+    y = shape.getPosition().y;
+
+    std::cout << "=====================================================" << "\n";
     std::cout << win_x << "\n";
     std::cout << win_y << "\n";
+
+    if (x <= 0)
+    {
+        std::cout << "That's bad" << "\n";
+        std::cout << "x <= 0" << "\n";
+        shape.setPosition(50.f, 50.f);
+    }
+    if (x >= win_x)
+    {
+        std::cout << "That's bad" << "\n";
+        std::cout << "x >= win_x" << "\n";
+        shape.setPosition(50.f, 50.f);
+    }
+    if (y <= 0)
+    {
+        std::cout << "That's bad" << "\n";
+        std::cout << "y <= 0" << "\n";
+        shape.setPosition(50.f, 50.f);
+    }
+    if (y >= win_y)
+    {
+        std::cout << "That's bad" << "\n";
+        std::cout << "y >= win_y" << "\n";
+        shape.setPosition(50.f, 50.f);
+    }
+
+    std::cout << "=====================================================" << "\n";
 }
+
+class TempClass
+{
+    public:
+        sf::CircleShape temp_method()
+        {
+            std::cout << "[Debug] Generating shape here" << "\n";
+            sf::CircleShape shape(25.f);
+            shape.setFillColor(sf::Color::Blue);
+            shape.setPosition(50.f, 50.f);
+            return shape;
+        }
+
+};
 
 int main()
 {
@@ -27,6 +73,8 @@ int main()
 
     sf::RectangleShape rectangle(sf::Vector2f(120.f, 50.f));
     rectangle.setSize(sf::Vector2f(100.f, 100.f));
+
+    TempClass class_shape;
 
     while (window.isOpen())
     {
@@ -57,11 +105,12 @@ int main()
         window.clear();
         window.draw(shape);
         window.draw(shape_two);
+        window.draw(class_shape.temp_method());
         std::cout << shape.getPosition().x << " " << shape.getPosition().y << "\n";
-        window_collision_check(window.getSize().x, window.getSize().y, shape.getPosition().x, shape.getPosition().y);
-        window.draw(rectangle);
+        window_collision_check(window.getSize().x, window.getSize().y, shape.getPosition().x, shape.getPosition().y, shape);
+        //window.draw(rectangle);
         window.display();
-        Sleep(0.01);
+        Sleep(0.9);
 
     }
 
