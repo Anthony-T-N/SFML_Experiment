@@ -11,10 +11,13 @@ Further investigation is required to make sense of the files operating in the ba
 #include <Windows.h>
 
 // call by reference to function.
-void window_collision_check(float win_x, float win_y, float x, float y, sf::CircleShape &shape)
+void window_collision_check(sf::RenderWindow &window, sf::CircleShape &shape)
 {
-    x = shape.getPosition().x;
-    y = shape.getPosition().y;
+    float win_x = window.getSize().x; 
+    float win_y = window.getSize().y;
+
+    float x = shape.getPosition().x;
+    float y = shape.getPosition().y;
 
     std::cout << "=====================================================" << "\n";
     std::cout << win_x << "\n";
@@ -48,6 +51,26 @@ void window_collision_check(float win_x, float win_y, float x, float y, sf::Circ
     std::cout << "=====================================================" << "\n";
 }
 
+class Player
+{
+public:
+    Player(sf::Vector2f size)
+    {
+        player.setSize(size);
+        player.setFillColor(sf::Color::Magenta);
+    }
+    void draw_to(sf::RenderWindow& window)
+    {
+        window.draw(player);
+    }
+    void set_pos(sf::Vector2f new_pos)
+    {
+        player.setPosition({ new_pos });
+    }
+private:
+    sf::RectangleShape player;
+};
+
 class TempClass
 {
     public:
@@ -59,7 +82,6 @@ class TempClass
             shape.setPosition(50.f, 50.f);
             return shape;
         }
-
 };
 
 int main()
@@ -75,6 +97,9 @@ int main()
     rectangle.setSize(sf::Vector2f(100.f, 100.f));
 
     TempClass class_shape;
+
+    Player player({ 50, 50 });
+    player.set_pos({ 70, 80 });
 
     while (window.isOpen())
     {
@@ -103,16 +128,16 @@ int main()
         }
 
         window.clear();
+        player.draw_to(window);
         window.draw(shape);
         window.draw(shape_two);
         window.draw(class_shape.temp_method());
         std::cout << shape.getPosition().x << " " << shape.getPosition().y << "\n";
-        window_collision_check(window.getSize().x, window.getSize().y, shape.getPosition().x, shape.getPosition().y, shape);
+        window_collision_check(window, shape);
         //window.draw(rectangle);
         window.display();
         Sleep(0.9);
 
     }
-
     return 0;
 }
