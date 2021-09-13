@@ -67,8 +67,44 @@ public:
     {
         player.setPosition({ new_pos });
     }
+    void move_left()
+    {
+        player.move(sf::Vector2f(-0.3f, 0.0));
+    }
+    void move_right()
+    {
+        player.move(sf::Vector2f(0.3f, 0.0));
+    }
+    void move_up()
+    {
+        player.move(sf::Vector2f(0.0, -0.3f));
+    }
+    void move_down()
+    {
+        player.move(sf::Vector2f(0.0, +0.3f));
+    }
 private:
     sf::RectangleShape player;
+};
+
+class Game_Floor
+{
+public:
+    Game_Floor(sf::Vector2f size)
+    {
+        game_floor.setSize(size);
+        game_floor.setFillColor(sf::Color::White);
+    }
+    void draw_to(sf::RenderWindow& window)
+    {
+        window.draw(game_floor);
+    }
+    void set_pos(sf::Vector2f new_pos)
+    {
+        game_floor.setPosition({ new_pos });
+    }
+private:
+    sf::RectangleShape game_floor;
 };
 
 class TempClass
@@ -101,6 +137,9 @@ int main()
     Player player({ 50, 50 });
     player.set_pos({ 70, 80 });
 
+    Game_Floor game_floor({ 700, 50 });
+    game_floor.set_pos({ 0, 350 });
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -113,22 +152,27 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
         {
             shape.move(sf::Vector2f(-0.3f, 0.0));
+            player.move_left();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
         {
             shape.move(sf::Vector2f(0.3f, 0.0));
+            player.move_right();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
         {
             shape.move(sf::Vector2f(0.0, -0.3f));
+            player.move_up();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
         {
             shape.move(sf::Vector2f(0.0, +0.3f));
+            player.move_down();
         }
 
         window.clear();
         player.draw_to(window);
+        game_floor.draw_to(window);
         window.draw(shape);
         window.draw(shape_two);
         window.draw(class_shape.temp_method());
@@ -137,7 +181,6 @@ int main()
         //window.draw(rectangle);
         window.display();
         Sleep(0.9);
-
     }
     return 0;
 }
