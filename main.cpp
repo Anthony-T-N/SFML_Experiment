@@ -20,9 +20,6 @@ void window_collision_check(sf::RenderWindow &window, sf::CircleShape &shape)
     float y = shape.getPosition().y;
 
     std::cout << "=====================================================" << "\n";
-    std::cout << win_x << "\n";
-    std::cout << win_y << "\n";
-
     if (x <= 0)
     {
         std::cout << "That's bad" << "\n";
@@ -47,7 +44,6 @@ void window_collision_check(sf::RenderWindow &window, sf::CircleShape &shape)
         std::cout << "y >= win_y" << "\n";
         shape.setPosition(50.f, 50.f);
     }
-
     std::cout << "=====================================================" << "\n";
 }
 
@@ -83,6 +79,10 @@ public:
     {
         player.move(sf::Vector2f(0.0, +0.3f));
     }
+    sf::RectangleShape get_player()
+    {
+        return player;
+    }
 private:
     sf::RectangleShape player;
 };
@@ -103,21 +103,12 @@ public:
     {
         game_floor.setPosition({ new_pos });
     }
+    sf::RectangleShape get_game_floor()
+    {
+        return game_floor;
+    }
 private:
     sf::RectangleShape game_floor;
-};
-
-class TempClass
-{
-    public:
-        sf::CircleShape temp_method()
-        {
-            std::cout << "[Debug] Generating shape here" << "\n";
-            sf::CircleShape shape(25.f);
-            shape.setFillColor(sf::Color::Blue);
-            shape.setPosition(50.f, 50.f);
-            return shape;
-        }
 };
 
 int main()
@@ -131,8 +122,6 @@ int main()
 
     sf::RectangleShape rectangle(sf::Vector2f(120.f, 50.f));
     rectangle.setSize(sf::Vector2f(100.f, 100.f));
-
-    TempClass class_shape;
 
     Player player({ 50, 50 });
     player.set_pos({ 70, 80 });
@@ -149,22 +138,22 @@ int main()
                 window.close();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
         {
             shape.move(sf::Vector2f(-0.3f, 0.0));
             player.move_left();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         {
             shape.move(sf::Vector2f(0.3f, 0.0));
             player.move_right();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         {
             shape.move(sf::Vector2f(0.0, -0.3f));
             player.move_up();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
             shape.move(sf::Vector2f(0.0, +0.3f));
             player.move_down();
@@ -175,8 +164,11 @@ int main()
         game_floor.draw_to(window);
         window.draw(shape);
         window.draw(shape_two);
-        window.draw(class_shape.temp_method());
         std::cout << shape.getPosition().x << " " << shape.getPosition().y << "\n";
+        if (player.get_player().getGlobalBounds().intersects(game_floor.get_game_floor().getGlobalBounds()))
+        {
+            std::cout << "HELLO" << "\n";
+        }
         window_collision_check(window, shape);
         //window.draw(rectangle);
         window.display();
