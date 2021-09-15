@@ -53,7 +53,7 @@ public:
     Player(sf::Vector2f size)
     {
         player.setSize(size);
-        player.setFillColor(sf::Color::Magenta);
+        player.setFillColor(sf::Color::Yellow);
     }
     void draw_to(sf::RenderWindow& window)
     {
@@ -103,6 +103,10 @@ public:
     {
         game_floor.setPosition({ new_pos });
     }
+    float get_game_floor_y()
+    {
+        return game_floor.getPosition().y;
+    }
     sf::RectangleShape get_game_floor()
     {
         return game_floor;
@@ -117,26 +121,30 @@ int main()
     sf::CircleShape shape(25.f);
     shape.setFillColor(sf::Color::Green);
 
-    sf::CircleShape shape_two(25.f);
-    shape_two.setFillColor(sf::Color::Red);
-
-    sf::RectangleShape rectangle(sf::Vector2f(120.f, 50.f));
-    rectangle.setSize(sf::Vector2f(100.f, 100.f));
-
     Player player({ 50, 50 });
     player.set_pos({ 70, 80 });
 
     Game_Floor game_floor({ 700, 50 });
     game_floor.set_pos({ 0, 350 });
 
+    // Gravity
+    const int ground_height = game_floor.get_game_floor_y();
+    const float gravity_speed = 0.3;
+    bool is_jumping = false;
+
     while (window.isOpen())
     {
         sf::Event event;
+
+        const float move_speed = 0.2;
+
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
+        is_jumping = false;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
         {
@@ -151,26 +159,35 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         {
             shape.move(sf::Vector2f(0.0, -0.3f));
+            is_jumping = true;
             player.move_up();
         }
+        /*
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
             shape.move(sf::Vector2f(0.0, +0.3f));
             player.move_down();
         }
+        */
+
+        // Gravity Logic 
+        if (player.get_player().getPosition().y < ground_height && is_jumping == false)
+        {
+            player.move_down();
+        }
+
 
         window.clear();
         player.draw_to(window);
         game_floor.draw_to(window);
         window.draw(shape);
-        window.draw(shape_two);
         std::cout << shape.getPosition().x << " " << shape.getPosition().y << "\n";
         if (player.get_player().getGlobalBounds().intersects(game_floor.get_game_floor().getGlobalBounds()))
         {
-            std::cout << "HELLO" << "\n";
+            std::cout << "Intersection" << "\n";
+            player.move_up();
         }
         window_collision_check(window, shape);
-        //window.draw(rectangle);
         window.display();
         Sleep(0.9);
     }
